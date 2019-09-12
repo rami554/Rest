@@ -11,8 +11,8 @@ class Bdatos {
     @Bean
     CommandLineRunner initDatabase(ClienteRepository repository) {
         return args -> {
-            log.info("Preloading " + repository.save(new Cliente("Ramiro Menendez", "Premium")));
-            log.info("Preloading " + repository.save(new Cliente("Carlos Cabrera", "Standar")));
+            log.info("Preloading " + repository.save(new Cliente("Ramiro", " Menendez", "Premium")));
+            log.info("Preloading " + repository.save(new Cliente("Carlos", " Cabrera", "Standar")));
         };
     }
 
