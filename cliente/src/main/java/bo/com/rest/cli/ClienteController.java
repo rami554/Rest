@@ -1,100 +1,53 @@
 package bo.com.rest.cli;
-import java.net.URI;
-import java.net.URISyntaxException;
+
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.hateoas.Resources;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import org.springframework.hateoas.Resource;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 @RestController
 class ClienteController {
     private final ClienteRepository repository;
-    private final ClienteResourceAssembler assembler;
 
-    ClienteController(ClienteRepository repository, ClienteResourceAssembler assembler){
+    ClienteController(ClienteRepository repository){
         this.repository = repository;
-        this.assembler = assembler;
     }
 
     //Agregando Rutas
-    @GetMapping("/cliente")
-    Resources<Resource<Cliente>> all() {
-
-        List<Resource<Cliente>> cliente = repository.findAll().stream()
-                .map(assembler::toResource)
-                .collect(Collectors.toList());
-
-        return new Resources<>(cliente,
-                linkTo(methodOn(ClienteController.class).all()).withSelfRel());
+    @GetMapping("/getcliente")
+    List<Cliente> all() {
+        return repository.findAll();
     }
-    @PostMapping("/cliente")
-    Resources<Resource<Cliente>> all() {
-
-        List<Resource<Cliente>> cliente = repository.findAll().stream()
-                .map(assembler::toResource)
-                .collect(Collectors.toList());
-
-        return new Resources<>(cliente,
-                linkTo(methodOn(ClienteController.class).all()).withSelfRel());
+    @PostMapping("/postcliente")
+    Cliente nuevoCliente(@RequestBody Cliente nuevoCliente) {
+        return repository.save(nuevoCliente);
     }
     //item simple
-    @GetMapping("/cliente/{id}")
-    ResponseEntity<?> nuevoCliente(@RequestBody Cliente nuevoCliente) throws URISyntaxException {
+    @GetMapping("/getcliente/{id}")
+    Cliente one(@PathVariable Long id) {
 
-        Resource<Cliente> resource = assembler.toResource(repository.save(nuevoCliente));
-
-        return ResponseEntity
-                .created(new URI(resource.getId().expand().getHref()))
-                .body(resource);
-    }
-
-    @GetMapping("/employees/{id}")
-    Resource<Cliente> one(@PathVariable Long id) {
-
-        Cliente cliente = repository.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new ClienteNotFoundException(id));
-
-        return assembler.toResource(cliente);
     }
 
-    @PutMapping("/cliente/{id}")
-    ResponseEntity<?> replaceCliente(@RequestBody Cliente nuevocliente, @PathVariable Long id) throws URISyntaxException {
+    @PutMapping("/putcliente/{id}")
+    Cliente replaceCliente(@RequestBody Cliente nuevoCliente, @PathVariable Long id) {
 
-        Cliente UpdateCliente = repository.findById(id)
-                .map(cliente -> {
-                    cliente.setnombre(nuevocliente.getnombre());
-                    cliente.setrol(nuevocliente.getrol());
-                    return repository.save(cliente);
+        return repository.findById(id)
+                .map(Cliente -> {
+                    Cliente.setNombre(nuevoCliente.getNombre());
+                    Cliente.setApellido(nuevoCliente.getApellido());
+                    Cliente.setRol(nuevoCliente.getRol());
+                    return repository.save(Cliente);
                 })
                 .orElseGet(() -> {
-                    nuevocliente.setId(id);
-                    return repository.save(nuevocliente);
+                    nuevoCliente.setId(id);
+                    return repository.save(nuevoCliente);
                 });
-
-        Resource<Cliente> resource = assembler.toResource(UpdateCliente);
-
-        return ResponseEntity
-                .created(new URI(resource.getId().expand().getHref()))
-                .body(resource);
     }
 
-    @DeleteMapping("/cliente/{id}")
-    ResponseEntity<?> BorrarCliente(@PathVariable Long id) {
-
+    @DeleteMapping("/delcliente/{id}")
+    void deleteCliente(@PathVariable Long id) {
         repository.deleteById(id);
-
-        return ResponseEntity.noContent().build();
     }
+
 }

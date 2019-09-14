@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Slf4j
-class Bdatos {
+class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(ClienteRepository repository) {
         return args -> {
