@@ -1,5 +1,8 @@
-package bo.com.rest.cli;
+package bo.com.rest.cli.controller;
 
+import bo.com.rest.cli.Cliente;
+import bo.com.rest.cli.repository.ClienteRepository;
+import bo.com.rest.cli.Exception.ClienteNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

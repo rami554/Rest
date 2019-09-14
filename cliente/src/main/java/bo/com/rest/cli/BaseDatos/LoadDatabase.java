@@ -1,4 +1,6 @@
-package bo.com.rest.cli;
+package bo.com.rest.cli.BaseDatos;
+import bo.com.rest.cli.Cliente;
+import bo.com.rest.cli.repository.ClienteRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.CommandLineRunner;

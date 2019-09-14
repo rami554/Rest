@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-class Cliente {
+public class Cliente {
 
     private @Id
     @GeneratedValue
@@ -17,7 +17,7 @@ class Cliente {
     private String apellido;
     private String rol;
     Cliente(){}
-    Cliente(String nombre, String apellido, String rol) {
+    public Cliente(String nombre, String apellido, String rol) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.rol = rol;
